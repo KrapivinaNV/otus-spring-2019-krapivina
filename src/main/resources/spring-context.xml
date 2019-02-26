@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="csvParser" class="otus.service.parser.DefaultCsvParser">
+    <constructor-arg name="fileName" value="/questionnaire.csv"/>
+  </bean>
+
+  <bean id="questionnaire" factory-method="parse" factory-bean="csvParser"/>
+
+  <bean id="scanner" class="otus.data.scanner.QuestionInputScanner"/>
+
+  <bean id="personService" class="otus.service.person.PersonServiceImpl">
+    <constructor-arg name="questionInputScanner" ref="scanner"/>
+  </bean>
+
+  <bean id="questionnaireService" class="otus.service.questioning.QuestionnaireServiceImpl">
+    <constructor-arg name="questionInputScanner" ref="scanner"/>
+    <constructor-arg name="questionnaire" ref="questionnaire"/>
+  </bean>
+
+  <bean id="printerService" class="otus.service.printer.PrinterQuestionnaireService"/>
+
+  <bean id="mainQuestionnaire" class="otus.service.main.MainQuestionnaireImpl">
+    <constructor-arg name="personService" ref="personService"/>
+    <constructor-arg name="questionnaireService" ref="questionnaireService"/>
+    <constructor-arg name="printerService" ref="printerService"/>
+  </bean>
+
+</beans>
