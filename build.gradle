@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+    //TODO: for further tests
+    maven { url 'https://jitpack.io' }
+}
+
+mainClassName = 'otus.Main'
+
+dependencies {
+    compile group: 'org.springframework', name: 'spring-context', version: '4.2.0.RELEASE'
+    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
+    compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+    //TODO: for further tests
+    testCompile('org.junit.jupiter:junit-jupiter-api:5.4.0')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.0')
+    testCompile('com.github.sbrannen:spring-test-junit5:1.4.0')
+}
+
+run {
+    standardInput = System.in
+}
