@@ -1,14 +1,16 @@
 package otus;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import otus.service.configuration.MainConfiguration;
 import otus.service.main.MainQuestionnaire;
-
 
 public class Main {
 
 	public static void main(String[] args) {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/spring-context.xml");
-		MainQuestionnaire mainQuestionnaire = context.getBean(MainQuestionnaire.class);
+		ApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(MainConfiguration.class);
+		MainQuestionnaire mainQuestionnaire = annotationConfigApplicationContext.getBean(MainQuestionnaire.class);
 		mainQuestionnaire.start();
 	}
 }

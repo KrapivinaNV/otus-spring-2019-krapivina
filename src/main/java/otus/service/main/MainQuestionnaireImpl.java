@@ -26,7 +26,7 @@ public class MainQuestionnaireImpl implements MainQuestionnaire {
 	public void start() {
 		printerService.print(
 				personService.inputPersonData(),
-				questionnaireService.getScore()
+				questionnaireService.processAndGetScore()
 		);
 	}
 }
