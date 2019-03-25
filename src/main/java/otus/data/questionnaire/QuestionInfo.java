@@ -28,7 +28,7 @@ public class QuestionInfo {
 	@Override
 	public String toString() {
 		return text +
-				"\nВарианты ответов :\n" +
+				" " +
 				answers;
 	}
 }

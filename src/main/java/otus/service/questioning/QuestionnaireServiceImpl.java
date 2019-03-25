@@ -4,6 +4,7 @@ import java.util.Scanner;
 import otus.data.questionnaire.QuestionInfo;
 import otus.data.questionnaire.Questionnaire;
 import otus.data.scanner.QuestionInputScanner;
+import otus.service.localization.MessageResolver;
 
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
@@ -11,13 +12,17 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
 	private final QuestionInputScanner questionInputScanner;
 
-	public QuestionnaireServiceImpl(Questionnaire questionnaire, QuestionInputScanner questionInputScanner) {
+	private final MessageResolver messageResolver;
+
+	public QuestionnaireServiceImpl(Questionnaire questionnaire, QuestionInputScanner questionInputScanner,
+			MessageResolver messageResolver) {
 		this.questionnaire = questionnaire;
 		this.questionInputScanner = questionInputScanner;
+		this.messageResolver = messageResolver;
 	}
 
 	@Override
-	public ScoreResults getScore() {
+	public ScoreResults processAndGetScore() {
 		return new ScoreResults(
 				(int) questionnaire.getQuestionInfos().stream()
 						.filter(this::isAnswerRight)
@@ -34,9 +39,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 	private int getAnswerFromUser(QuestionInfo questionInfo) {
 		Scanner scanner = this.questionInputScanner.getScanner();
 		while (true) {
-			System.out.println("Введите номер ответа : ");
+			System.out.println(messageResolver.getMessage("text.answer"));
 			if (!scanner.hasNextInt()) {
-				System.out.println("Номер ответа должен быть числом");
+				System.out.println(messageResolver.getMessage("text.error.number"));
 				scanner.next();
 				continue;
 			}
@@ -51,9 +56,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 		return questionInfo.checkAnswer(answerNumberGot);
 	}
 
-	private static boolean isNumberValid(int answer, int maxAnswersCountQuestion) {
+	private boolean isNumberValid(int answer, int maxAnswersCountQuestion) {
 		if (answer > maxAnswersCountQuestion || answer < 1) {
-			System.out.println("Номер ответа должен быть в диапазоне от 1 до " + maxAnswersCountQuestion);
+			System.out.println(messageResolver
+					.getMessage("text.error.range", new String[]{String.valueOf(maxAnswersCountQuestion)}));
 			return false;
 		}
 		return true;
