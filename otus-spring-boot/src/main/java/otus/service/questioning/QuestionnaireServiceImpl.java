@@ -16,8 +16,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 	private final MessageResolver messageResolver;
 
 	public QuestionnaireServiceImpl(CsvParser csvParser, QuestionInputScanner questionInputScanner,
-			MessageResolver messageResolver) {
-		this.questionnaire = csvParser.parse();
+			MessageResolver messageResolver, String filename) {
+		this.questionnaire = csvParser.parse(filename);
 		this.questionInputScanner = questionInputScanner;
 		this.messageResolver = messageResolver;
 	}

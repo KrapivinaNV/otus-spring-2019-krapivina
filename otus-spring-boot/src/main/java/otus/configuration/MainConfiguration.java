@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import otus.data.scanner.QuestionInputScanner;
 import otus.service.localization.MessageResolver;
@@ -14,7 +13,7 @@ import otus.service.localization.MessageResolverImpl;
 import otus.service.main.MainQuestionnaire;
 import otus.service.main.MainQuestionnaireImpl;
 import otus.service.parser.CsvParser;
-import otus.service.parser.DefaultCsvParser;
+import otus.service.parser.QuizCsvParser;
 import otus.service.person.PersonService;
 import otus.service.person.PersonServiceImpl;
 import otus.service.printer.PrinterQuestionnaireService;
@@ -38,11 +37,6 @@ public class MainConfiguration {
 	}
 
 	@Bean
-	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-		return new PropertySourcesPlaceholderConfigurer();
-	}
-
-	@Bean
 	public MessageSource messageSource() {
 		ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
 		ms.setBasename("/il8n/bundle");
@@ -56,8 +50,8 @@ public class MainConfiguration {
 	}
 
 	@Bean
-	public CsvParser csvParser(MessageResolver messageResolver) {
-		return new DefaultCsvParser(this.filename);
+	public CsvParser csvParser() {
+		return new QuizCsvParser();
 	}
 
 	@Bean
@@ -71,8 +65,9 @@ public class MainConfiguration {
 	}
 
 	@Bean
-	public QuestionnaireService questionnaireService(QuestionInputScanner scanner, MessageResolver messageResolver) {
-		return new QuestionnaireServiceImpl(csvParser(messageResolver), scanner, messageResolver);
+	public QuestionnaireService questionnaireService(CsvParser parser, QuestionInputScanner scanner,
+			MessageResolver messageResolver) {
+		return new QuestionnaireServiceImpl(parser, scanner, messageResolver, this.filename);
 	}
 
 	@Bean
@@ -81,10 +76,11 @@ public class MainConfiguration {
 	}
 
 	@Bean
-	public MainQuestionnaire mainQuestionnaire(QuestionInputScanner scanner, MessageResolver messageResolver) {
+	public MainQuestionnaire mainQuestionnaire(CsvParser parser, QuestionInputScanner scanner,
+			MessageResolver messageResolver) {
 		return new MainQuestionnaireImpl(
 				personService(scanner, messageResolver),
-				questionnaireService(scanner, messageResolver),
+				questionnaireService(parser, scanner, messageResolver),
 				printerService(messageResolver)
 		);
 	}

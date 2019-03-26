@@ -4,6 +4,6 @@ import otus.data.questionnaire.Questionnaire;
 
 public interface CsvParser {
 
-	Questionnaire parse();
+	Questionnaire parse(String filename);
 
 }
