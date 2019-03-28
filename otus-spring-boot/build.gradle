@@ -1,0 +1,25 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.3.RELEASE'
+    id 'java'
+    id 'application'
+}
+
+apply plugin: 'io.spring.dependency-management'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
+    compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+run {
+    standardInput = System.in
+}
+
+mainClassName = 'otus.Main'
