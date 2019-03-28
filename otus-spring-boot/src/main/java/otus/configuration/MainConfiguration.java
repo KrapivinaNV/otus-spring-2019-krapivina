@@ -1,6 +1,5 @@
 package otus.configuration;
 
-import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
@@ -26,14 +25,11 @@ import otus.service.questioning.QuestionnaireServiceImpl;
 @EnableConfigurationProperties(QuizProperties.class)
 public class MainConfiguration {
 
-	private final String filename;
-
-	private final Locale locale;
+	private final QuizProperties properties;
 
 	@Autowired
 	public MainConfiguration(QuizProperties properties) {
-		this.locale = properties.getLocale();
-		this.filename = String.format(properties.getFilename(), this.locale);
+		this.properties = properties;
 	}
 
 	@Bean
@@ -46,7 +42,7 @@ public class MainConfiguration {
 
 	@Bean
 	public MessageResolver messageResolver(MessageSource messageSource) {
-		return new MessageResolverImpl(messageSource, this.locale);
+		return new MessageResolverImpl(messageSource, this.properties.getLocale());
 	}
 
 	@Bean
@@ -67,7 +63,12 @@ public class MainConfiguration {
 	@Bean
 	public QuestionnaireService questionnaireService(CsvParser parser, QuestionInputScanner scanner,
 			MessageResolver messageResolver) {
-		return new QuestionnaireServiceImpl(parser, scanner, messageResolver, this.filename);
+		return new QuestionnaireServiceImpl(
+				parser,
+				scanner,
+				messageResolver,
+				String.format(this.properties.getFilename(), this.properties.getLocale())
+		);
 	}
 
 	@Bean
