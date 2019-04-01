@@ -1,28 +1,26 @@
 package otus.service.questioning;
 
-import java.util.Scanner;
 import otus.data.questionnaire.QuestionInfo;
 import otus.data.questionnaire.Questionnaire;
-import otus.data.scanner.QuestionInputScanner;
+import otus.data.scanner.Reader;
 import otus.service.localization.MessageResolver;
-import otus.service.parser.CsvParser;
 
 public class QuestionnaireServiceImpl implements QuestionnaireService {
 
 	private final Questionnaire questionnaire;
 
-	private final QuestionInputScanner questionInputScanner;
+	private final Reader reader;
 
 	private final MessageResolver messageResolver;
 
-	public QuestionnaireServiceImpl(CsvParser csvParser, QuestionInputScanner questionInputScanner,
-			MessageResolver messageResolver, String filename) {
-		this.questionnaire = csvParser.parse(filename);
-		this.questionInputScanner = questionInputScanner;
+	public QuestionnaireServiceImpl(Questionnaire questionnaire, Reader reader,
+			MessageResolver messageResolver) {
+		this.questionnaire = questionnaire;
+		this.reader = reader;
 		this.messageResolver = messageResolver;
 	}
 
-	private static boolean isAnswerRight(QuestionInfo questionInfo, int answerNumberGot) {
+	private static boolean isAnswerRight(QuestionInfo questionInfo, Integer answerNumberGot) {
 		return questionInfo.checkAnswer(answerNumberGot);
 	}
 
@@ -41,18 +39,17 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 		return isAnswerRight(questionInfo, getAnswerFromUser(questionInfo));
 	}
 
-	private int getAnswerFromUser(QuestionInfo questionInfo) {
-		Scanner scanner = this.questionInputScanner.getScanner();
+	private Integer getAnswerFromUser(QuestionInfo questionInfo) {
 		while (true) {
 			System.out.println(messageResolver.getMessage("text.answer"));
-			if (!scanner.hasNextInt()) {
+			Integer input;
+			try {
+				input = Integer.valueOf(reader.readLine());
+				if (isNumberValid(input, questionInfo.getAnswersCount())) {
+					return input;
+				}
+			} catch (NumberFormatException e) {
 				System.out.println(messageResolver.getMessage("text.error.number"));
-				scanner.next();
-				continue;
-			}
-			int input = scanner.nextInt();
-			if (isNumberValid(input, questionInfo.getAnswersCount())) {
-				return input;
 			}
 		}
 	}
