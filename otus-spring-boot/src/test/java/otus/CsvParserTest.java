@@ -14,7 +14,6 @@ import otus.data.questionnaire.Questionnaire;
 import otus.service.parser.CsvParser;
 import otus.service.parser.QuizCsvParser;
 
-@RunWith(SpringRunner.class)
 public class CsvParserTest {
 
 	@Test

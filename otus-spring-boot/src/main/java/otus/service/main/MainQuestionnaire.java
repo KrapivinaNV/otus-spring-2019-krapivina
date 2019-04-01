@@ -2,5 +2,9 @@ package otus.service.main;
 
 public interface MainQuestionnaire {
 
-	void start();
+	void login();
+
+	void test();
+
+	void result();
 }
