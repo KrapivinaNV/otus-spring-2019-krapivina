@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import otus.data.questionnaire.Answer;
 import otus.data.questionnaire.QuestionInfo;
@@ -16,16 +14,12 @@ import otus.data.questionnaire.Questionnaire;
 import otus.service.parser.CsvParser;
 import otus.service.parser.QuizCsvParser;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = QuizCsvParser.class)
 public class CsvParserTest {
-
-	@Autowired
-	private CsvParser csvParser;
 
 	@Test
 	public void parse() {
-		Questionnaire actualParse = csvParser.parse("/quiz-test.csv");
+		CsvParser csvParser = new QuizCsvParser("/quiz-test.csv");
+		Questionnaire actualParse = csvParser.parse();
 
 		List<QuestionInfo> questionInfos =
 				Stream.of(
@@ -45,7 +39,8 @@ public class CsvParserTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void parseNoFileException() {
-		csvParser.parse("/quiz-test2.csv");
+		CsvParser csvParser = new QuizCsvParser("/quiz-test2.csv");
+		csvParser.parse();
 	}
 
 }

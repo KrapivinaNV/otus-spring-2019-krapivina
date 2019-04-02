@@ -1,28 +1,26 @@
 package otus.service.person;
 
-import java.util.Scanner;
 import otus.data.person.Person;
-import otus.data.scanner.QuestionInputScanner;
+import otus.data.scanner.Reader;
 import otus.service.localization.MessageResolver;
 
 public class PersonServiceImpl implements PersonService {
 
-	private final QuestionInputScanner questionInputScanner;
+	private final Reader reader;
 
 	private final MessageResolver messageResolver;
 
-	public PersonServiceImpl(QuestionInputScanner questionInputScanner, MessageResolver messageResolver) {
-		this.questionInputScanner = questionInputScanner;
+	public PersonServiceImpl(Reader questionInputReader, MessageResolver messageResolver) {
+		this.reader = questionInputReader;
 		this.messageResolver = messageResolver;
 	}
 
 	@Override
 	public Person inputPersonData() {
-		Scanner scanner = this.questionInputScanner.getScanner();
 		System.out.println(messageResolver.getMessage("text.fname"));
-		String firstName = scanner.nextLine();
+		String firstName = reader.readLine();
 		System.out.println(messageResolver.getMessage("text.sname"));
-		String lastName = scanner.nextLine();
+		String lastName = reader.readLine();
 
 		return new Person(firstName, lastName);
 	}

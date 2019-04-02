@@ -15,18 +15,23 @@ import otus.data.questionnaire.Questionnaire;
 
 public class QuizCsvParser implements CsvParser {
 
-	@Override
-	public Questionnaire parse(String fileName) {
+	private final String fileName;
+
+	public QuizCsvParser(String fileName) {
 		if (fileName == null) {
 			throw new IllegalArgumentException();
 		}
+		this.fileName = fileName;
+	}
 
+	@Override
+	public Questionnaire parse() {
 		InputStream stream = QuizCsvParser.class.getResourceAsStream(fileName);
 		if (stream == null) {
 			throw new IllegalStateException();
 		}
 
-		Questionnaire questionnaire = new Questionnaire();
+		List<QuestionInfo> questionInfoList = new ArrayList<>();
 		try {
 			Reader in = new StringReader(IOUtils.toString(stream));
 			for (CSVRecord record : CSVFormat.newFormat(';').parse(in)) {
@@ -37,9 +42,9 @@ public class QuizCsvParser implements CsvParser {
 					Answer answer = new Answer(textAnswer, Boolean.valueOf(record.get(i + 1)));
 					answers.add(answer);
 				}
-				questionnaire.addQuestion(new QuestionInfo(textQuestion, answers));
+				questionInfoList.add(new QuestionInfo(textQuestion, answers));
 			}
-			return questionnaire;
+			return new Questionnaire(questionInfoList);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);

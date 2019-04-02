@@ -1,8 +1,10 @@
 package otus.service.main;
 
+import otus.data.person.Person;
 import otus.service.person.PersonService;
 import otus.service.printer.PrinterService;
 import otus.service.questioning.QuestionnaireService;
+import otus.service.questioning.ScoreResults;
 
 public class MainQuestionnaireImpl implements MainQuestionnaire {
 
@@ -11,6 +13,11 @@ public class MainQuestionnaireImpl implements MainQuestionnaire {
 	private final QuestionnaireService questionnaireService;
 
 	private final PrinterService printerService;
+
+	private Person person;
+
+	private ScoreResults results;
+
 
 	public MainQuestionnaireImpl(
 			PersonService personService,
@@ -22,11 +29,19 @@ public class MainQuestionnaireImpl implements MainQuestionnaire {
 		this.printerService = printerService;
 	}
 
+
 	@Override
-	public void start() {
-		printerService.print(
-				personService.inputPersonData(),
-				questionnaireService.processAndGetScore()
-		);
+	public void login() {
+		this.person = personService.inputPersonData();
+	}
+
+	@Override
+	public void test() {
+		this.results = questionnaireService.processAndGetScore();
+	}
+
+	@Override
+	public void result() {
+		printerService.print(this.person, this.results);
 	}
 }

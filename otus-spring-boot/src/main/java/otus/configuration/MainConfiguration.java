@@ -6,7 +6,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import otus.data.scanner.QuestionInputScanner;
+import otus.data.scanner.Reader;
+import otus.data.scanner.ScannerReader;
 import otus.service.localization.MessageResolver;
 import otus.service.localization.MessageResolverImpl;
 import otus.service.main.MainQuestionnaire;
@@ -47,27 +48,26 @@ public class MainConfiguration {
 
 	@Bean
 	public CsvParser csvParser() {
-		return new QuizCsvParser();
+		return new QuizCsvParser(String.format(this.properties.getFilename(), this.properties.getLocale()));
 	}
 
 	@Bean
-	public QuestionInputScanner scanner() {
-		return new QuestionInputScanner();
+	public Reader reader() {
+		return new ScannerReader();
 	}
 
 	@Bean
-	public PersonService personService(QuestionInputScanner scanner, MessageResolver messageResolver) {
-		return new PersonServiceImpl(scanner, messageResolver);
+	public PersonService personService(Reader reader, MessageResolver messageResolver) {
+		return new PersonServiceImpl(reader, messageResolver);
 	}
 
 	@Bean
-	public QuestionnaireService questionnaireService(CsvParser parser, QuestionInputScanner scanner,
+	public QuestionnaireService questionnaireService(CsvParser parser, Reader reader,
 			MessageResolver messageResolver) {
 		return new QuestionnaireServiceImpl(
-				parser,
-				scanner,
-				messageResolver,
-				String.format(this.properties.getFilename(), this.properties.getLocale())
+				parser.parse(),
+				reader,
+				messageResolver
 		);
 	}
 
@@ -77,11 +77,11 @@ public class MainConfiguration {
 	}
 
 	@Bean
-	public MainQuestionnaire mainQuestionnaire(CsvParser parser, QuestionInputScanner scanner,
+	public MainQuestionnaire mainQuestionnaire(CsvParser parser, Reader reader,
 			MessageResolver messageResolver) {
 		return new MainQuestionnaireImpl(
-				personService(scanner, messageResolver),
-				questionnaireService(parser, scanner, messageResolver),
+				personService(reader, messageResolver),
+				questionnaireService(parser, reader, messageResolver),
 				printerService(messageResolver)
 		);
 	}
