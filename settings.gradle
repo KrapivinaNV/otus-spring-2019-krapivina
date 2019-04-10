@@ -1,4 +1,5 @@
 //include 'otus-spring-boot'
 //include 'otus-spring-base'
-include 'otus-spring-library'
+//include 'otus-data-jdbc'
+include 'otus-data-jpa'
 

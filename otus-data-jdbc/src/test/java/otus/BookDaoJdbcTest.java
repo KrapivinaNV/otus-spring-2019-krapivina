@@ -22,7 +22,7 @@ public class BookDaoJdbcTest {
 	private BookDao bookDao;
 
 	@Test
-	public void addBookTest() {
+	public void addAndGetBookTest() {
 		UUID bookId = bookDao.addBook(
 				"Test",
 				ImmutableList.of(UUID.fromString("00000000-0000-0000-0000-000000000001")),
