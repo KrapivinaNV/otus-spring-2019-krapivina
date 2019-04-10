@@ -49,7 +49,7 @@ public class Book {
 
 	@Fetch(FetchMode.SUBSELECT)
 	@OneToMany(mappedBy = "book")
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	private List<Comment> comments = new ArrayList<>();
 
 	public Book(String name, Set<Author> authors, Set<Genre> genres) {
