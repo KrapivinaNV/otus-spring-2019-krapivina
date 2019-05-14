@@ -3,5 +3,6 @@
 //include 'otus-jdbc'
 //include 'otus-jpa'
 //include 'otus-spring-data'
-include 'otus-spring-data-mongodb'
+//include 'otus-spring-data-mongodb'
+include 'otus-spring-mvc'
 
