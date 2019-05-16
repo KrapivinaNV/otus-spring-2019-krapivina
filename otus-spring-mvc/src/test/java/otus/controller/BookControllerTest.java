@@ -1,6 +1,8 @@
 package otus.controller;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -17,7 +19,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import otus.domain.Book;
 import otus.service.LibraryService;
 
@@ -36,13 +37,15 @@ public class BookControllerTest {
 	public void booksTest() throws Exception {
 		List<Book> books = ImmutableList.of(new Book("name", ImmutableSet.of(), ImmutableSet.of()));
 
-		when(libraryService.getAllBooks())
-				.thenReturn(books);
+		when(libraryService.getAllBooks()).thenReturn(books);
 
-		ResultActions resultActions = mockMvc.perform(get("/"))
+		mockMvc.perform(get("/"))
 				.andExpect(status().isOk())
 				.andExpect(view().name("list"))
 				.andExpect(model().attribute("books", equalTo(books)));
+
+		verify(libraryService, times(1)).getAllBooks();
+
 	}
 
 	//TODO:: Добавить остальные тесты

@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,25 +23,25 @@ public class BookController {
 	}
 
 	@GetMapping("/")
-	public String books(Model model) {
+	public String getBookListView(Model model) {
 		model.addAttribute("books", libraryService.getAllBooks());
 		return "list";
 	}
 
 	@GetMapping("/add")
-	public String addBook(Model model) {
+	public String getAddView(Model model) {
 		return "add";
 	}
 
 	@PostMapping("/new")
-	public String saveBook(@RequestParam("name") String name, Model model) {
+	public String saveNewBook(@RequestParam("name") String name, Model model) {
 		libraryService.addBook(name, Sets.newHashSet(), Sets.newHashSet());
 		model.addAttribute("books", libraryService.getAllBooks());
-		return "list";
+		return "redirect:/";
 	}
 
 	@GetMapping("/edit/{id}")
-	public String editBook(@PathVariable("id") UUID id, Model model) {
+	public String getEditView(@PathVariable("id") UUID id, Model model) {
 		model.addAttribute("book", libraryService.getBook(id).orElseThrow(IllegalArgumentException::new));
 		return "edit";
 	}
@@ -49,18 +50,18 @@ public class BookController {
 	public String updateBook(@RequestParam("id") UUID id, @RequestParam("name") String name, Model model) {
 		libraryService.updateBookName(name, id);
 		model.addAttribute("books", libraryService.getAllBooks());
-		return "list";
+		return "redirect:/";
 	}
 
-	@GetMapping("/delete/{id}")
-	public String deleteBook(@PathVariable("id") UUID id, Model model) {
+	@DeleteMapping("/delete/{id}")
+	public String delete(@PathVariable("id") UUID id, Model model) {
 		libraryService.deleteBook(id);
 		model.addAttribute("books", libraryService.getAllBooks());
-		return "list";
+		return "redirect:/";
 	}
 
 	@GetMapping("/comments/{id}")
-	public String getComments(@PathVariable("id") UUID id, Model model) {
+	public String getCommentsView(@PathVariable("id") UUID id, Model model) {
 		model.addAttribute("comments", libraryService.getAllCommentByBookId(id));
 		model.addAttribute("bookName", libraryService.getBook(id).orElseThrow(IllegalArgumentException::new).getName());
 		return "comments";

@@ -30,8 +30,18 @@
   <tr th:each="book : ${books}">
     <td th:text="${book.id}"></td>
     <td th:text="${book.name}"></td>
-    <td><a th:href="@{/edit/{id}(id=${book.id})}" href="edit.html">Edit</a></td>
-    <td><a th:href="@{/delete/{id}(id=${book.id})}">Delete</a></td>
+    <td>
+      <form action="Edit" th:action="@{/edit/{id}(id=${book.id})}" th:method="get">
+        <input type="hidden" name="_method" value="edit"/>
+        <button type="submit">Edit</button>
+      </form>
+    </td>
+    <td>
+      <form action="Delete" th:action="@{/delete/{id}(id=${book.id})}" th:method="delete">
+        <input type="hidden" name="_method" value="delete"/>
+        <button type="submit">Delete</button>
+      </form>
+    </td>
     <td><a th:href="@{/comments/{id}(id=${book.id})}">Comments</a></td>
   </tr>
   </tbody>
