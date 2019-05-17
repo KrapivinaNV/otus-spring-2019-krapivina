@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>List of all books</title>
+  <style type="text/css">
+    body {
+      padding: 50px;
+    }
+
+    .persons, .persons td {
+      border: 1px solid lightgray;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+<h1>Books:</h1>
+
+<table class="books">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <a th:href="@{/add}" href="add.html">Add new book</a>
+  <tr th:each="book : ${books}">
+    <td th:text="${book.id}"></td>
+    <td th:text="${book.name}"></td>
+    <td>
+      <form action="Edit" th:action="@{/edit/{id}(id=${book.id})}" th:method="get">
+        <input type="hidden" name="_method" value="edit"/>
+        <button type="submit">Edit</button>
+      </form>
+    </td>
+    <td>
+      <form action="Delete" th:action="@{/delete/{id}(id=${book.id})}" th:method="delete">
+        <input type="hidden" name="_method" value="delete"/>
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+    <td><a th:href="@{/comments/{id}(id=${book.id})}">Comments</a></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
