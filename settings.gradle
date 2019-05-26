@@ -4,5 +4,6 @@
 //include 'otus-jpa'
 //include 'otus-spring-data'
 //include 'otus-spring-data-mongodb'
-include 'otus-spring-mvc'
+//include 'otus-spring-mvc'
+include 'otus-webflux'
 
